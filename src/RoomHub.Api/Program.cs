@@ -4,12 +4,10 @@ using RoomHub.Api.Common.Cqrs;
 using RoomHub.Api.Domain.Bookings;
 using RoomHub.Api.Domain.Common;
 using RoomHub.Api.Domain.Rooms;
-using RoomHub.Api.Endpoints;
 using RoomHub.Api.Features.Bookings;
 using RoomHub.Api.Features.Rooms;
 using RoomHub.Api.Infrastructure.Persistence;
-using RoomHub.Api.Middleware;
-using RoomHub.Api.Services;
+using RoomHub.Api.Infrastructure.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,25 +25,17 @@ builder.Services.AddDbContext<RoomHubDbContext>((serviceProvider, options) =>
 // The repositories and the Unit of Work share the same DbContext instance.
 builder.Services.AddScoped<IUnitOfWork>(serviceProvider =>
     serviceProvider.GetRequiredService<RoomHubDbContext>());
-builder.Services.AddScoped<IRoomRepository, RoomHub.Api.Infrastructure.Persistence.Repositories.RoomRepository>();
-builder.Services.AddScoped<IBookingRepository, RoomHub.Api.Infrastructure.Persistence.Repositories.BookingRepository>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
 builder.Services.AddHandlers(typeof(Program).Assembly);
-
-// TEMPORARY: old starter booking flow, removed in the next steps.
-builder.Services.AddSingleton<RoomHub.Api.Repositories.RoomRepository>();
-builder.Services.AddSingleton<RoomHub.Api.Repositories.BookingRepository>();
-builder.Services.AddScoped<BookingService>();
 
 var app = builder.Build();
 
 await app.InitializeDatabaseAsync();
 
-app.UseMiddleware<ExceptionMiddleware>();
-
 app.MapGet("/", () => "RoomHub API is running.");
 app.MapRooms();
 app.MapBookings();
-app.MapBookingEndpoints();
 
 app.Run();

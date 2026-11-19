@@ -9,3 +9,4 @@ Write down, in order, what you asked the AI. It is not a punishment: a missing o
 | 2 minutes | verify that the app works | kept curl verification | left a hidden process blocking port 5090 so i had to kill it |
 |10 minutes | implement task 3 ( R9, R10, R11) | kept rules in Booking.Create and the new method CountActiveForPersonOnDayAsync | i choose to integrate these directly in TASK 3 |
 | 1 minute | test with curl all the rules | all cases passed | Nothing |
+| 2 minute | Task 4( cancel R8, R11) and delete the old code  | CancelBooking slice, Booking.Cancel, requests in roomhub.http | Nothing |
