@@ -1,9 +1,11 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using RoomHub.Api.Common.Cqrs;
+using RoomHub.Api.Domain.Bookings;
 using RoomHub.Api.Domain.Common;
 using RoomHub.Api.Domain.Rooms;
 using RoomHub.Api.Endpoints;
+using RoomHub.Api.Features.Bookings;
 using RoomHub.Api.Features.Rooms;
 using RoomHub.Api.Infrastructure.Persistence;
 using RoomHub.Api.Middleware;
@@ -26,6 +28,7 @@ builder.Services.AddDbContext<RoomHubDbContext>((serviceProvider, options) =>
 builder.Services.AddScoped<IUnitOfWork>(serviceProvider =>
     serviceProvider.GetRequiredService<RoomHubDbContext>());
 builder.Services.AddScoped<IRoomRepository, RoomHub.Api.Infrastructure.Persistence.Repositories.RoomRepository>();
+builder.Services.AddScoped<IBookingRepository, RoomHub.Api.Infrastructure.Persistence.Repositories.BookingRepository>();
 
 builder.Services.AddHandlers(typeof(Program).Assembly);
 
@@ -42,7 +45,7 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapGet("/", () => "RoomHub API is running.");
 app.MapRooms();
-app.MapRoomEndpoints();
+app.MapBookings();
 app.MapBookingEndpoints();
 
 app.Run();
